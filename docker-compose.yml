@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+  rabbit-local:
+    image: rabbitmq:3.8.6-management
+    restart: unless-stopped
+    #    volumes:
+    #      - 'rabbit_local:/var/lib/rabbitmq/mnesia/'
+    ports:
+      - "15672:15672"
+    networks:
+      default:
+      local:
+        aliases:
+          - rabbit
+
+  mongo-local:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      default:
+      local:
+        aliases:
+          - mongo
+
+  postgres-local:
+    image: postgres:16
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: user-api
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pg_local:/var/lib/postgresql/data
+    logging:
+      options:
+        max-file: "3"
+        max-size: "1m"
+    networks:
+      default:
+      local:
+        aliases:
+          - postgres
+
+networks:
+  local:
+    external:
+      name: local
+
+volumes:
+  rabbit_local:
+  pg_local:
