@@ -14,19 +14,29 @@ services:
         aliases:
           - rabbit
 
-  mongo-local:
-    image: mongo
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
     restart: unless-stopped
     ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-    networks:
-      default:
-      local:
-        aliases:
-          - mongo
+      - '3000:3000'
+    volumes:
+      - grafana_storage:/var/lib/grafana
+
+#  mongo-local:
+#    image: mongo
+#    restart: unless-stopped
+#    ports:
+#      - "27017:27017"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: password
+#    networks:
+#      default:
+#      local:
+#        aliases:
+#          - mongo
 
   postgres-local:
     image: postgres:16
@@ -56,3 +66,4 @@ networks:
 volumes:
   rabbit_local:
   pg_local:
+  grafana_storage:
